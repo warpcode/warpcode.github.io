@@ -1,0 +1,80 @@
+---
+  - hosts: all
+    gather_facts: yes
+    tasks:
+      - name: Ensure HTTPS is available for apt
+        become: yes
+        apt:
+          name: apt-transport-https
+
+      - name: Add Nodesource apt key.
+        become: yes
+        apt_key:
+          url: https://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x1655A0AB68576280
+          id: "68576280"
+          state: present
+
+      - name: Add NodeSource repositories for Node.js.
+        become: yes
+        apt_repository:
+          repo: "{{ item }}"
+          state: present
+        with_items:
+          - "deb https://deb.nodesource.com/node_11.x {{ ansible_distribution_release }} main"
+          - "deb-src https://deb.nodesource.com/node_11.x {{ ansible_distribution_release }} main"
+
+      - name: Update apt cache.
+        become: yes
+        apt: update_cache=yes
+
+      - name: Install required packages
+        become: yes
+        package:
+          name: "{{ item }}"
+        with_items:
+          - build-essential
+          - vim
+          - curl
+          - git-core
+          - nodejs
+          - libgmp3-dev
+          - ruby
+          - ruby-dev
+
+      - name: install required gems
+        become: yes
+        gem:
+          name: "{{ item }}"
+          state: latest
+          user_install: no
+        with_items:
+          - bundler
+          - github-pages
+
+      - name: Install the jekyll watch service
+        become: yes
+        template:
+          src: templates/jekyll.service.j2
+          dest: /etc/systemd/system/jekyll.service
+          owner: root
+          group: root
+          mode: 0644
+      
+      - name: restart jekyll
+        become: yes
+        systemd:
+          daemon_reload: yes
+
+      - name: restart jekyll
+        become: yes
+        systemd:
+          name: jekyll
+          state: stopped
+        ignore_errors: yes
+
+      - name: Make sure the jekyll service is running
+        become: yes
+        systemd:
+          state: started
+          enabled: yes
+          name: jekyll
