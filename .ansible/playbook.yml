@@ -41,6 +41,22 @@
           - ruby
           - ruby-dev
 
+      - name: install required bundler gem
+        become: yes
+        gem:
+          name: "{{ item }}"
+          state: latest
+          user_install: no
+        with_items:
+          - bundler
+
+      - name: install project gems
+        become: yes
+        bundler:
+          chdir: /vagrant
+          state: latest
+          user_install: no
+      
       - name: install required gems
         become: yes
         gem:
@@ -60,7 +76,7 @@
           group: root
           mode: 0644
       
-      - name: restart jekyll
+      - name: reload systemd
         become: yes
         systemd:
           daemon_reload: yes
