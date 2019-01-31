@@ -6,7 +6,7 @@ After=syslog.target network.target
 User=root
 Type=simple
 WorkingDirectory=/vagrant
-ExecStart=/usr/local/bin/jekyll serve --force_polling -P 4000 --host=0.0.0.0 --source "/vagrant"
+ExecStart=/usr/local/bin/jekyll serve --force_polling -P 4000 --host=0.0.0.0
 ExecStop=/usr/bin/pkill -f jekyll
 Restart=always
 TimeoutStartSec=60
