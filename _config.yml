@@ -26,7 +26,9 @@ github_username:  jekyll
 
 # Build settings
 markdown: kramdown
-theme: minima
+source: ./src
+
+# theme: minima
 plugins:
   - jekyll-feed
 
@@ -34,6 +36,8 @@ plugins:
 exclude: 
     - .ansible
     - .gitignore
+    - Gemfile
+    - Gemfile.lock
     - Vagrantfile
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.
