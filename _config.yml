@@ -35,10 +35,15 @@ plugins:
 # Exclude from processing.
 exclude: 
     - .ansible
+    - .bablerc
     - .gitignore
     - Gemfile
     - Gemfile.lock
+    - node_modules
+    - package.json
+    - package-lock.json
     - Vagrantfile
+    - vendor
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.
 # exclude:
